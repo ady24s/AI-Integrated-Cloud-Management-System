@@ -38,7 +38,7 @@ def fetch_s3_buckets():
     ]
     return buckets
 
-def fetchIdleInstances(instances):
+def find_idle_instances(instances):
     try:
         print("Instances Passed to Idle Check:", instances)  # Debugging
         idle_instances = [instance for instance in instances if instance.get('state') == 'stopped']
@@ -47,4 +47,5 @@ def fetchIdleInstances(instances):
     except Exception as e:
         print("Error in find_idle_instances:", e)  # Debugging
         raise
+
 

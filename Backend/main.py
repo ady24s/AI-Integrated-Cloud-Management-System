@@ -3,9 +3,7 @@ from sqlalchemy import create_engine, Column, Integer, String, Float
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, Session
 from pydantic import BaseModel
-from services.aws_service import fetch_ec2_instances
-from services.aws_service import fetch_s3_buckets
-
+from services.aws_service import fetch_ec2_instances, fetch_s3_buckets, find_idle_instances
 
 # Initialize FastAPI app
 app = FastAPI()
@@ -133,20 +131,11 @@ def get_s3_buckets():
     buckets = fetch_s3_buckets()
     return {"buckets": buckets}
 
-@app.get("/aws/s3")
-def get_s3_buckets():
-    buckets = fetch_s3_buckets()
-    return {"buckets": buckets}
-
 @app.get("/aws/idle-instances")
 def get_idle_instances():
     try:
         instances = fetch_ec2_instances()
-        print("Instances Fetched for Idle Check:", instances)  # Debugging
-        idle_instances = find_idle_instances(instances)
-        print("Returning Idle Instances:", idle_instances)  # Debugging
+        idle_instances = fetch_idle_instances(instances)  # Ensure this function exists in services.aws_service
         return {"idle_instances": idle_instances}
     except Exception as e:
-        print("Error in /aws/idle-instances Endpoint:", e)  # Debugging
-        raise HTTPException(status_code=500, detail="Failed to fetch idle instances.")
-
+        raise HTTPException(status_code=500, detail=f"Failed to fetch idle instances: {str(e)}")

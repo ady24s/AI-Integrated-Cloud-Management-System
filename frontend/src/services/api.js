@@ -39,6 +39,6 @@ export const fetchIdleInstances = async () => {
         return response.data.idle_instances;
     } catch (error) {
         console.error("Error fetching idle instances:", error);
-        return [];
+        return [] ;
     }
 };
